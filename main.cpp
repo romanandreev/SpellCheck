@@ -12,18 +12,20 @@ using namespace std;
 bool isLetter(char c) {       
     return ((c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z'));
 }
-char toLowerCase(char c) {
+char toLowerCaseC(char c) {
     if (c >= 'A' && c <= 'Z') {
         return c - 'A' + 'a'; 
     }
     return c;
 }
+
 string toLowerCase(string s) {
-    string t = "";
+	transform(s.begin(), s.end(), s.begin(), toLowerCaseC);
+/*    string t = "";
     for (int i = 0; i < (int)s.size(); i++) {
         t += toLowerCase(s[i]);
-    }
-    return t;
+    }*/
+    return s;
 }
 
 const int alp = 'z' - 'a' + 1;
@@ -40,7 +42,7 @@ void createDictionary(string fileName) {
         string t;
         for (int i = 0; i < (int)s.length(); i++) {
             if (isLetter(s[i])) {
-                t += toLowerCase(s[i]);
+                t += toLowerCaseC(s[i]);
             } else {
                 if ((int)t.length() > 0) {
                     addWord(t);
@@ -122,6 +124,7 @@ string processWord(string s0) {
     vector<string> variants;
     variants.push_back(s);
     set<pair<int, string> > best;
+
     for (set<string>::iterator it = dictionary[first].begin(); it != dictionary[first].end(); ++it) {
         best.insert(make_pair(hammingDistance(s, *it), *it));
         while ((int)best.size() > 9) {
@@ -134,11 +137,12 @@ string processWord(string s0) {
             best.erase(*best.rbegin());
         }
     }
+
     for (set<pair<int, string> >::iterator it = best.begin(); it != best.end(); ++it) {
         if (it->first <= 4) {
             variants.push_back(it->second);
         }
-    }
+    } 
     for (int i = 0; i < (int)variants.size(); i++) {
         cout<<i + 1<<") "<<variants[i]<<endl;
     } 
